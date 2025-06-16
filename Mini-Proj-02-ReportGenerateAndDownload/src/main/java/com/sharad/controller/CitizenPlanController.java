@@ -13,6 +13,8 @@ import com.sharad.binding.SearchCriteria;
 import com.sharad.entity.CitizenPlan;
 import com.sharad.service.CitizenPlanService;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Controller
 public class CitizenPlanController {
 	
@@ -32,9 +34,25 @@ public class CitizenPlanController {
 		       	model.addAttribute("citizenInfo", citizenInfo);
 				formInit(model);
 				System.out.println(criteria);
-		return "index"; // Return the name of the view (index.html or index.jsp)
+		return "index"; 
 	}
 
+	@GetMapping("/excel")
+	public void generateExcel(HttpServletResponse response) throws Exception {
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=citizen-plans.xls"); // Set the header (key,value)for file download
+		// Call the service method to generate the Excel file
+		service.generateExcel(response);
+	}
+	
+	@GetMapping("/pdf")
+	public void generatePdf(HttpServletResponse response) throws Exception {
+		response.setContentType("application/pdf");
+		response.setHeader("Content-Disposition", "attachment; filename=data.pdf"); // Set the header (key,value)for file download
+		// Call the service method to generate the Excel file
+		service.generatePdf(response);
+	}
+	
 	
 	private void formInit(Model model) {
 		List<String> planNames = service.getPlanNames();
